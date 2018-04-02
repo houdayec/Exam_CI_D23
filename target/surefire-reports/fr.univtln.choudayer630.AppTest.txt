@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: fr.univtln.choudayer630.AppTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.113 sec - in fr.univtln.choudayer630.AppTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.088 sec - in fr.univtln.choudayer630.AppTest

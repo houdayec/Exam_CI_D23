@@ -1,5 +1,8 @@
-exam\EntityManager.class
 exam\model\Catalog.class
+exam\rest\Test.class
 exam\model\Author.class
+exam\rest\AuthorManager.class
+exam\rest\BookManager.class
+exam\database\EntityManager.class
 exam\App.class
 exam\model\Book.class

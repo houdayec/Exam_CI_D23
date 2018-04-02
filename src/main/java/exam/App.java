@@ -1,27 +1,35 @@
 package exam;
 
+
 import exam.database.EntityManager;
 import exam.model.Author;
 import exam.model.Book;
 import exam.model.Catalog;
+
 import org.apache.log4j.PatternLayout;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
- * Hello world!
+ * MAIN CLASS
  */
 public class App {
     @SuppressWarnings("unused")
@@ -29,15 +37,44 @@ public class App {
             org.apache.log4j.ConsoleAppender.class,
             PatternLayout.class};
 
-    //Set the logger with the real class name.
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     static{
         EntityManager.getInstance();
     }
 
-    public static void main(String[] args) {
+    // Base URI the Grizzly HTTP server will listen on
+    public static final String BASE_URI = "http://192.168.1.85:8282/";
 
+    /**
+     * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
+     * @return Grizzly HTTP server.
+     */
+    public static HttpServer startServer() {
+        // create a resource config that scans for JAX-RS resources and providers
+        // in rest package
+        final ResourceConfig rc = new ResourceConfig().packages("exam").register(new LoggingFeature(java.util.logging.Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.SEVERE, LoggingFeature.Verbosity.PAYLOAD_ANY, Integer.MAX_VALUE));
+
+
+        // create and start a new instance of grizzly http server
+        // exposing the Jersey application at BASE_URI
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        // Starting to parse the data from xml file
+        startSTAXParsing();
+
+        // Start jersey server for REST api.
+        final HttpServer server = startServer();
+        System.out.println(String.format("Jersey app started with WADL available at "
+                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+        System.in.read();
+        System.out.println("You typed something, server stop will be executed.");
+        server.stop();
+
+    }
+
+    public static void startSTAXParsing(){
         URL url = null;
         try {
             // Opening a file using a stream to read it
@@ -108,7 +145,7 @@ public class App {
                             System.out.println("book and listAuthors reinitialisées");
                         }
                         System.out.println("book saved");
-                            break;
+                        break;
                     case XMLStreamConstants.CHARACTERS:
                         break;
                     case XMLStreamConstants.CDATA:
@@ -136,7 +173,6 @@ public class App {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 

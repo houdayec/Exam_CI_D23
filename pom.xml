@@ -11,8 +11,11 @@
         <lsisnexus.login>corentin-houdayer@etud.univ-tln.fr</lsisnexus.login>
         <!-- the default Main class -->
         <app.main.class>exam.App</app.main.class>
+        <!-- jersey server version -->
+        <jersey.version>2.25</jersey.version>
+        <!-- encoding type -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <!-- ADAPTER LES PROPRIETES SUIVANTES -->
 
     <repositories>
         <repository>
@@ -124,6 +127,17 @@
         </plugins>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -161,12 +175,14 @@
             <version>2.5.1</version>
         </dependency>
 
+        <!-- POSTGRESQL DATABASE DEPENDENCY -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.3-1100-jdbc41</version>
         </dependency>
 
+        <!-- LOMBOK DEPENDENCY -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -193,4 +209,6 @@
             <version>1.18</version>
         </dependency>
     </dependencies>
+
+
 </project>
