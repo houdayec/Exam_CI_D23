@@ -15,7 +15,6 @@ public class Book implements Serializable{
      * INTERN STATE
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     @ManyToMany( cascade = CascadeType.PERSIST )

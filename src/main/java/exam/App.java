@@ -42,7 +42,8 @@ public class App {
     }
 
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://192.168.1.85:8282/";
+    public static final String BASE_URI = "http://192.168.43.150:8282/";
+    //public static final String BASE_URI = "http://192.168.1.28:8282/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.

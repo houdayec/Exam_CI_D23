@@ -3,8 +3,10 @@ package exam.rest;
 import exam.database.EntityManager;
 import exam.model.Book;
 
+import javax.json.JsonObject;
 import javax.persistence.Query;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class BookManager {
         // TODO ?
         findAllBooks  = EntityManager.getEntityManager().createQuery("SELECT b FROM Book b");
         localBookList = findAllBooks.getResultList();
+        System.out.println("Taille liste locale " + localBookList.size());
     }
 
     @GET
@@ -68,17 +71,19 @@ public class BookManager {
 
     @PUT
     @Path("books")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void updateBook(Book book){
-
-        for(Book bk : localBookList){
+    @Consumes("application/json")
+    public void updateBook(JsonObject book){
+        System.out.println("trying to put " + book.toString());
+        /*for(Book bk : localBookList){
             if(bk.getId() == book.getId()){
-                bk = book;
+                Book bookToUpdate = EntityManager.getEntityManager().find(Book.class, bk.getId());
+                bookToUpdate = book;
                 EntityManager.getEntityTransaction().begin();
-                EntityManager.getEntityManager().refresh(bk);
+                EntityManager.getEntityManager().refresh(bookToUpdate);
                 EntityManager.getEntityTransaction().commit();
+                System.out.println("Book updated : " + bk.getId());
             }
-        }
+        }*/
 
     }
 
@@ -86,10 +91,13 @@ public class BookManager {
     @Path("books")
     @Consumes(MediaType.APPLICATION_JSON)
     public Book createBook(Book book){
+        System.out.println("Trying to create " + book.toString());
         try{
             EntityManager.getEntityTransaction().begin();
             EntityManager.getEntityManager().persist(book);
             EntityManager.getEntityTransaction().commit();
+            EntityManager.getEntityManager().refresh(book);
+            System.out.println("Book created " + book.toString());
             localBookList.add(book);
             return book;
         }catch(Exception e){
@@ -101,16 +109,41 @@ public class BookManager {
     @DELETE
     @Path("books/{id}")
     public void deleteBook(@PathParam("id") String id){
-        try{
+        System.out.println("Trying to delete " + id);
             for(Book b : localBookList){
-                if(b.getId() == id){
+                System.out.println("Current book id : " + b.getId());
+                if(b.getId().equals(id)){
+                    Book bookToDelete = EntityManager.getEntityManager().find(Book.class, id);
                     EntityManager.getEntityTransaction().begin();
-                    EntityManager.getEntityManager().remove(b);
+                    EntityManager.getEntityManager().remove(bookToDelete);
                     EntityManager.getEntityTransaction().commit();
+                    System.out.println("Book deleted : " + id);
                 }
             }
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+    }
+
+    @GET
+    @Path("books/posthardcoded")
+    public void addBook(){
+        System.out.println("TRY TO POST");
+        Book book = new Book();
+        book.setId("bk999");
+        book.setTitle("EXAM - TEST REST");
+        book.setDescription("This is a basic description.");
+        EntityManager.getEntityTransaction().begin();
+        EntityManager.getEntityManager().persist(book);
+        EntityManager.getEntityTransaction().commit();
+        localBookList.add(book);
+    }
+
+    @GET
+    @Path("books/updatehardcoded")
+    public void updateBook(){
+        System.out.println("TRY TO UPDATE");
+        Book book = EntityManager.getInstance().getEntityManager().find(Book.class, "bk111");
+        book.setTitle("THE TITLE GOT UPDATED");
+        EntityManager.getEntityTransaction().begin();
+        EntityManager.getEntityManager().createQuery("UPDATE Book b SET b.title = \'TITLE UPDATED\' WHERE b.id=:id").setParameter("id", "bk111").executeUpdate();
+        EntityManager.getEntityTransaction().commit();
     }
 }
