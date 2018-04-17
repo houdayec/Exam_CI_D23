@@ -13,6 +13,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/exam"/>
             <property name="javax.persistence.jdbc.user" value="exam"/>
             <property name="javax.persistence.jdbc.password" value="exam"/>
+            <property name="openjpa.log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO"/>
 
             <!-- Les options de générations des tables -->
             <property name="eclipselink.ddl-generation.output-mode" value="both"/>

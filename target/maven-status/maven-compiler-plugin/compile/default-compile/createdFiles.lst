@@ -1,3 +1,4 @@
+exam\App.class
 exam\model\Catalog.class
 exam\rest\Test.class
 exam\controllers\BookController.class
@@ -6,5 +7,5 @@ exam\rest\AuthorManager.class
 exam\rest\BookManager.class
 exam\controllers\AuthorController.class
 exam\database\EntityManager.class
-exam\App.class
 exam\model\Book.class
+exam\Logger.class

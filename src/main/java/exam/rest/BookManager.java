@@ -1,9 +1,10 @@
 package exam.rest;
 
+import exam.Logger;
 import exam.database.EntityManager;
 import exam.model.Book;
 
-import javax.json.JsonObject;
+import javax.persistence.PrePersist;
 import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
@@ -72,7 +73,7 @@ public class BookManager {
     @PUT
     @Path("books")
     @Consumes("application/json")
-    public void updateBook(JsonObject book){
+    public void updateBook(Book book){
         System.out.println("trying to put " + book.toString());
         /*for(Book bk : localBookList){
             if(bk.getId() == book.getId()){
@@ -145,5 +146,10 @@ public class BookManager {
         EntityManager.getEntityTransaction().begin();
         EntityManager.getEntityManager().createQuery("UPDATE Book b SET b.title = \'TITLE UPDATED\' WHERE b.id=:id").setParameter("id", "bk111").executeUpdate();
         EntityManager.getEntityTransaction().commit();
+    }
+
+    @PrePersist
+    public void prePersist(){
+        Logger.getInstance().log.info("Persist done !");
     }
 }
