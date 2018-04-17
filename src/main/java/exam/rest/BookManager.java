@@ -75,16 +75,16 @@ public class BookManager {
     @Consumes("application/json")
     public void updateBook(Book book){
         System.out.println("trying to put " + book.toString());
-        /*for(Book bk : localBookList){
+        for(Book bk : localBookList){
             if(bk.getId() == book.getId()){
                 Book bookToUpdate = EntityManager.getEntityManager().find(Book.class, bk.getId());
                 bookToUpdate = book;
                 EntityManager.getEntityTransaction().begin();
-                EntityManager.getEntityManager().refresh(bookToUpdate);
+                EntityManager.getEntityManager().merge(bookToUpdate);
                 EntityManager.getEntityTransaction().commit();
                 System.out.println("Book updated : " + bk.getId());
             }
-        }*/
+        }
 
     }
 
@@ -121,31 +121,6 @@ public class BookManager {
                     System.out.println("Book deleted : " + id);
                 }
             }
-    }
-
-    @GET
-    @Path("books/posthardcoded")
-    public void addBook(){
-        System.out.println("TRY TO POST");
-        Book book = new Book();
-        book.setId("bk999");
-        book.setTitle("EXAM - TEST REST");
-        book.setDescription("This is a basic description.");
-        EntityManager.getEntityTransaction().begin();
-        EntityManager.getEntityManager().persist(book);
-        EntityManager.getEntityTransaction().commit();
-        localBookList.add(book);
-    }
-
-    @GET
-    @Path("books/updatehardcoded")
-    public void updateBook(){
-        System.out.println("TRY TO UPDATE");
-        Book book = EntityManager.getInstance().getEntityManager().find(Book.class, "bk111");
-        book.setTitle("THE TITLE GOT UPDATED");
-        EntityManager.getEntityTransaction().begin();
-        EntityManager.getEntityManager().createQuery("UPDATE Book b SET b.title = \'TITLE UPDATED\' WHERE b.id=:id").setParameter("id", "bk111").executeUpdate();
-        EntityManager.getEntityTransaction().commit();
     }
 
     @PrePersist
